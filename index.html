@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario con Gráfico</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial; margin: 30px; }
+        form { margin-bottom: 20px; padding: 20px; border: 1px solid #ccc; width: 300px; }
+        label { display: block; margin-top: 10px; }
+        input { width: 100%; padding: 6px; }
+        button { margin-top: 15px; padding: 10px; width: 100%; cursor: pointer; }
+        #graficoContainer { width: 600px; height: 400px; margin-top: 30px; }
+    </style>
+</head>
+<body>
+
+    <h2>Formulario de Ventas</h2>
+
+    <form id="formVentas">
+        <label>Mes:</label>
+        <input type="text" id="mes" placeholder="Ej: Enero">
+
+        <label>Total de Ventas:</label>
+        <input type="number" id="ventas" placeholder="Ej: 1500">
+
+        <button type="submit">Agregar al gráfico</button>
+    </form>
+
+
+    <div id="graficoContainer">
+        <canvas id="graficoVentas"></canvas>
+    </div>
+
+    <script>
+
+        let meses = [];
+        let ventas = [];
+
+        const ctx = document.getElementById('graficoVentas');
+        const grafico = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: meses,
+                datasets: [{
+                    label: 'Ventas por Mes',
+                    data: ventas
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        document.getElementById("formVentas").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const mes = document.getElementById("mes").value;
+            const venta = parseFloat(document.getElementById("ventas").value);
+
+            if (mes === "" || isNaN(venta)) {
+                alert("Completá todos los campos.");
+                return;
+            }
+
+            meses.push(mes);
+            ventas.push(venta);
+
+            grafico.update();
+
+            document.getElementById("mes").value = "";
+            document.getElementById("ventas").value = "";
+        });
+    </script>
+
+</body>
+</html>
